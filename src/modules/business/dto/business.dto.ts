@@ -2,7 +2,7 @@ import { IsString, IsNotEmpty, IsEmail, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PlaceDto } from '../../places/dto/place.dto';
 
-export class CreateBusinessDto {
+export class BusinessDto {
   @IsString()
   @IsNotEmpty()
   name: string;

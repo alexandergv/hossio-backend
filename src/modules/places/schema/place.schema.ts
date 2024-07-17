@@ -6,8 +6,8 @@ export type PlaceDocument = Place & Document;
 
 @Schema()
 export class Place extends Document {
-  @Prop({ required: true })
-  id: number;
+  @Prop({ required: true, unique: true })
+  id: string;
 
   @Prop({ required: true })
   name: string;

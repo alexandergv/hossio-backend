@@ -5,7 +5,7 @@ export interface Review {
   }
   
   export interface Place {
-    id: number;
+    id: string;
     name: string;
     description: string;
     rating: number;

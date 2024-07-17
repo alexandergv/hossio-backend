@@ -3,15 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { Business } from './schema/business.schema';
-import { CreateBusinessDto } from './dto/create-business.dto';
+import { BusinessDto } from './dto/business.dto';
 
 @Injectable()
 export class BusinessService {
   constructor(@InjectModel(Business.name) private businessModel: Model<Business>) {}
 
-  async create(createBusinessDto: CreateBusinessDto): Promise<Business> {
+  async create(businessDto: BusinessDto): Promise<Business> {
     const id = uuidv4();
-    const createdBusiness = new this.businessModel({ ...createBusinessDto, id });
+    const createdBusiness = new this.businessModel({ ...businessDto, id });
     return createdBusiness.save();
   }
 
