@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Place, PlaceDocument } from '../schemas/place.schema';
+import { Place, PlaceDocument } from './schema/place.schema';
 
 @Injectable()
 export class PlacesService {

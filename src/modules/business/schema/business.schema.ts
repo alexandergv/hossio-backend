@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Place } from './place.schema';
+import { Place } from '../../places/schema/place.schema';
 
 @Schema()
 export class Business extends Document {

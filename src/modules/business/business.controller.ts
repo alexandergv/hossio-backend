@@ -1,7 +1,7 @@
 import { Controller,Get, Post, Body, Param } from '@nestjs/common';
 import { BusinessService } from './business.service';
-import { CreateBusinessDto } from '../dto/create-business.dto';
-import { Business } from '../schemas/business.schema';
+import { CreateBusinessDto } from './dto/create-business.dto';
+import { Business } from './schema/business.schema';
 
 @Controller('business')
 export class BusinessController {

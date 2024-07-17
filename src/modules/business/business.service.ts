@@ -2,8 +2,8 @@ import { Injectable,NotFoundException  } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { Business } from '../schemas/business.schema';
-import { CreateBusinessDto } from '../dto/create-business.dto';
+import { Business } from './schema/business.schema';
+import { CreateBusinessDto } from './dto/create-business.dto';
 
 @Injectable()
 export class BusinessService {

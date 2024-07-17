@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsEmail, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PlaceDto } from '../dto/place.dto';
+import { PlaceDto } from '../../places/dto/place.dto';
 
 export class CreateBusinessDto {
   @IsString()

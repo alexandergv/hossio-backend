@@ -1,8 +1,8 @@
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PlacesModule } from './places/places.module';
-import { BusinessModule } from './business/business.module';
+import { PlacesModule } from './modules/places/places.module';
+import { BusinessModule } from './modules/business/business.module';
 
 @Module({
   imports: [
