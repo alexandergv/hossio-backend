@@ -5,29 +5,29 @@ import { Document } from 'mongoose';
 export type PlaceDocument = Place & Document;
 
 @Schema()
-export class Place {
-  @Prop()
+export class Place extends Document {
+  @Prop({ required: true })
   id: number;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   description: string;
 
-  @Prop()
+  @Prop({ required: true })
   rating: number;
 
-  @Prop([String])
+  @Prop({ required: true })
   images: string[];
 
-  @Prop([Object])
-  reviews: { text: string; author: string }[];
+  @Prop({ required: true })
+  reviews: { text: string, author: string }[];
 
-  @Prop()
+  @Prop({ required: true })
   latitude: string;
 
-  @Prop()
+  @Prop({ required: true })
   longitude: string;
 }
 
