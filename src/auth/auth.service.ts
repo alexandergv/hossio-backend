@@ -23,8 +23,15 @@ export class AuthService {
 
   async login(user: Users) {
     const payload = { email: user.email, sub: user.id };
+    const access_token = this.jwtService.sign(payload);
+
+    // const token = this.jwtService.sign( {
+    //   hello: 'world'   
+    // }, 'myverysecretkey', {
+    //     expiresIn: '24h'
+    // });
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token
     };
   }
 }
