@@ -3,23 +3,37 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from '../auth.service';
 import { Users } from 'src/modules/users/schema/users.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Request } from 'express';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+    @InjectModel(Users.name) private userModel: Model<Users>,
+  ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (req: Request) => {
+          // Extract token from cookies
+          const token = req.headers.cookie.split(';')
+          .find(row => row.startsWith('auth_token='))
+          .split('=')[1];
+          return token;
+        }
+      ]),
       ignoreExpiration: false,
       secretOrKey: 'hossio',
     });
   }
 
-  async validate(email: string, password: string) {
-    console.log(email);
-    const user: Users = await this.authService.validateUser(email, password);
+  async validate(payload: any) {
+    // Aquí puedes realizar validaciones adicionales
+    const user = await this.userModel.findById(payload.sub).exec();
+    
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('User not found');
     }
-    return user;
+    return { userId: user._id, email: user.email, role: user.role };
   }
 }
