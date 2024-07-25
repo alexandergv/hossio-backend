@@ -14,6 +14,10 @@ export class UsersService {
     return this.userModel.findOne({ email }).lean().exec();
   }
 
+  async findById(id: string): Promise<Users | undefined> {
+    return this.userModel.findById(id).lean().exec();
+  }
+
   async create(userDto: UsersDto): Promise<Users> {
     const hashedPassword = await bcrypt.hash(userDto.password, 10);
     const id = uuidv4();

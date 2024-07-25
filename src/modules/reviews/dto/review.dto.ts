@@ -17,4 +17,7 @@ export class ReviewDto {
   @IsMongoId()
   @IsNotEmpty()
   place: string;
+
+  @IsString()
+  author: string;
 }
