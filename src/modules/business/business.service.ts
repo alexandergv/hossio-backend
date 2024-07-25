@@ -23,5 +23,8 @@ export class BusinessService {
     return business;
   }
 
-  // Otros métodos como findAll, findOne, update, delete, etc.
+  async findByUserId(userId: string): Promise<Business> {
+    const business = await this.businessModel.findOne({ userId }).exec();
+    return business;
+  }
 }

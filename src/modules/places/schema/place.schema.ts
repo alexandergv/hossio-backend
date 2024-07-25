@@ -15,14 +15,11 @@ export class Place extends Document {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true , default: 0 })
   rating: number;
 
   @Prop({ required: true })
   images: string[];
-
-  @Prop({ required: true })
-  reviews: { text: string, author: string }[];
 
   @Prop({ required: true })
   latitude: string;

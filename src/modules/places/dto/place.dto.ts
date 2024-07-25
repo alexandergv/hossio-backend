@@ -24,16 +24,11 @@ export class PlaceDto {
   description: string;
 
   @IsNumber()
-  @IsNotEmpty()
   rating: number;
 
   @IsArray()
   @IsNotEmpty()
   images: string[];
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  reviews: ReviewDto[];
 
   @IsString()
   @IsNotEmpty()

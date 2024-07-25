@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { Place } from '../../places/schema/place.schema';
 
 @Schema()
@@ -22,8 +22,11 @@ export class Business extends Document {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ type: Place, required: true })
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Place' })
   place: Place;
+
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
+  userId: Types.ObjectId;
 }
 
 export const BusinessSchema = SchemaFactory.createForClass(Business);

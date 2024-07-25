@@ -15,8 +15,6 @@ export class Review extends Document {
   @Prop({ required: true, type: Types.ObjectId, ref: 'Place' })
   place: Types.ObjectId;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Place' })
-  
   @Prop({ required: true })
   author: string;
 }
