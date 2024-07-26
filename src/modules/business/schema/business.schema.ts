@@ -4,8 +4,6 @@ import { Place } from '../../places/schema/place.schema';
 
 @Schema()
 export class Business extends Document {
-  @Prop({ required: true, unique: true })  // Ensure the ID is unique
-  id: string;
   
   @Prop({ required: true })
   name: string;

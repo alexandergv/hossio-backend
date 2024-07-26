@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty,   IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 class ReviewDto {
   @IsString()
@@ -10,11 +11,15 @@ class ReviewDto {
   author: string;
 }
 
-export class PlaceDto {
-  @IsNumber()
+class LocationDto {
+  @IsArray()
   @IsNotEmpty()
-  id: number;
+  @Type(() => Number)
+  coordinates: number[];
+}
 
+
+export class PlaceDto {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -30,11 +35,8 @@ export class PlaceDto {
   @IsNotEmpty()
   images: string[];
 
-  @IsString()
+  @ValidateNested()
+  @Type(() => LocationDto)
   @IsNotEmpty()
-  latitude: string;
-
-  @IsString()
-  @IsNotEmpty()
-  longitude: string;
+  location: LocationDto;
 }

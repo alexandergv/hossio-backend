@@ -6,8 +6,6 @@ export type PlaceDocument = Place & Document;
 
 @Schema()
 export class Place extends Document {
-  @Prop({ required: true, unique: true })
-  id: string;
 
   @Prop({ required: true })
   name: string;
@@ -21,11 +19,19 @@ export class Place extends Document {
   @Prop({ required: true })
   images: string[];
 
-  @Prop({ required: true })
-  latitude: string;
-
-  @Prop({ required: true })
-  longitude: string;
+  @Prop({
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+  })
+  location: { type: string, coordinates: [number, number] };
 }
 
 export const PlaceSchema = SchemaFactory.createForClass(Place);
+PlaceSchema.index({ location: '2dsphere' });

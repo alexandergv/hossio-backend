@@ -1,5 +1,5 @@
 // places/places.controller.ts
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param,Query } from '@nestjs/common';
 import { PlacesService } from './places.service';
 import { Place } from './interfaces/place.interface';
 import { PlaceDto } from './dto/place.dto';
@@ -19,5 +19,13 @@ export class PlacesController {
   @Get("getById/:id")
   async findOne(@Param('id') id: string): Promise<Place> {
     return this.placesService.findById(id);
+  }
+
+  @Get('nearby')
+  async getNearbyPlaces(
+    @Query('latitude') latitude: number,
+    @Query('longitude') longitude: number,
+  ) {
+    return this.placesService.findNearby(latitude, longitude);
   }
 }

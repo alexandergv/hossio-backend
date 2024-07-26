@@ -24,8 +24,26 @@ export class PlacesService {
   }
   
   async create(placeDto: PlaceDto): Promise<Place> {
-    const id = uuidv4();
-    const createdPlace = new this.placeModel({ ...placeDto, id });
-    return createdPlace.save();
+    const createdPlace = new this.placeModel({
+      ...placeDto,
+      location: {
+        type: 'Point',
+        coordinates: placeDto.location.coordinates,
+      },
+    }); return createdPlace.save();
+  }
+
+  async findNearby(latitude: number, longitude: number): Promise<Place[]> {
+    return this.placeModel.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [latitude, longitude],
+          },
+          $maxDistance: 10000, // distance in meters
+        },
+      },
+    }).exec();
   }
 }
