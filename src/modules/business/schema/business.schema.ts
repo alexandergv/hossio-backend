@@ -21,7 +21,7 @@ export class Business extends Document {
   description: string;
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'Place' })
-  place: Place;
+  place: Types.ObjectId;
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
