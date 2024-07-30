@@ -28,4 +28,9 @@ export class PlacesController {
   ) {
     return this.placesService.findNearby(latitude, longitude);
   }
+
+  @Get('/search')
+  async searchPlaces(@Query('q') query: string): Promise<Place[]> {
+    return this.placesService.searchPlaces(query);
+  }
 }

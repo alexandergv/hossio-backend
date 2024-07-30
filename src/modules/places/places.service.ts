@@ -46,4 +46,14 @@ export class PlacesService {
       },
     }).exec();
   }
+
+  async searchPlaces(query: string): Promise<Place[]> {
+    const searchRegex = new RegExp(query, 'i'); // 'i' for case-insensitive
+    return this.placeModel.find({
+      $or: [
+        { name: searchRegex },
+        { description: searchRegex },
+      ],
+    }).exec();
+  }
 }
