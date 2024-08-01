@@ -18,10 +18,15 @@ export class UsersService {
     return this.userModel.findById(id).lean().exec();
   }
 
+  async findWithoutPass(id: string): Promise<any | undefined> {
+    const foundUser = await this.userModel.findById(id).lean().exec();
+    const { password, ...result } = foundUser;
+    return result;
+  }
+
   async create(userDto: UsersDto): Promise<Users> {
     const hashedPassword = await bcrypt.hash(userDto.password, 10);
-    const id = uuidv4();
-    const createdUser = new this.userModel({ ...userDto, password: hashedPassword, id });
+    const createdUser = new this.userModel({ ...userDto, password: hashedPassword });
     return createdUser.save();
   }
 
