@@ -12,9 +12,9 @@ export class PlacesController {
   async findAll(): Promise<Place[]> {
     return this.placesService.findAll();
   }
-  @Post('AddNewPlace')
+  @Post('AddOrUpdate')
   async create(@Body() placeDto: PlaceDto): Promise<Place> {
-    return this.placesService.create(placeDto);
+    return this.placesService.createOrUpdate(placeDto);
   }
   @Get("getById/:id")
   async findOne(@Param('id') id: string): Promise<Place> {

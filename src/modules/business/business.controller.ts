@@ -8,9 +8,9 @@ import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}
 
-  @Post("AddNewBusinness")
+  @Post("AddOrUpdate")
   async create(@Body() createBusinessDto: BusinessDto): Promise<Business> {
-    return this.businessService.create(createBusinessDto);
+    return this.businessService.createOrUpdate(createBusinessDto);
   }
   @Get("getById/:id")
   async findOne(@Param('id') id: string): Promise<Business> {

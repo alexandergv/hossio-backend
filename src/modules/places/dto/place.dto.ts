@@ -21,6 +21,9 @@ class LocationDto {
 
 export class PlaceDto {
   @IsString()
+  _id: string;
+  
+  @IsString()
   @IsNotEmpty()
   name: string;
 

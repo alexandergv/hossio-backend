@@ -9,10 +9,20 @@ import { BusinessDto } from './dto/business.dto';
 export class BusinessService {
   constructor(@InjectModel(Business.name) private businessModel: Model<Business>) {}
 
-  async create(businessDto: BusinessDto): Promise<Business> {
-    const id = uuidv4();
-    const createdBusiness = new this.businessModel({ ...businessDto, id });
-    return createdBusiness.save();
+  async createOrUpdate(businessDto: BusinessDto): Promise<Business> {
+    let business: Business;
+    let businessId = businessDto._id;
+    
+    if (businessId) {
+      business = await this.businessModel.findById(businessId).exec();
+      if (!business) {
+        throw new NotFoundException(`Business with ID ${businessId} not found`);
+      }
+      Object.assign(business, businessDto);
+    } else {
+      business = new this.businessModel({ ...businessDto, id: uuidv4() });
+    }
+    return business.save();
   }
 
   async findById(id: string): Promise<Business> {

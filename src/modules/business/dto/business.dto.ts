@@ -4,6 +4,9 @@ import { PlaceDto } from '../../places/dto/place.dto';
 
 export class BusinessDto {
   @IsString()
+  _id: string;
+
+  @IsString()
   @IsNotEmpty()
   name: string;
 

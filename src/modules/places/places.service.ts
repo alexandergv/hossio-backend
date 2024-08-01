@@ -23,14 +23,30 @@ export class PlacesService {
     return place;
   }
   
-  async create(placeDto: PlaceDto): Promise<Place> {
-    const createdPlace = new this.placeModel({
-      ...placeDto,
-      location: {
+  async createOrUpdate(placeDto: PlaceDto): Promise<Place> {
+    let place: any;
+    let placeId = placeDto._id;
+    
+    if (placeId) {
+      place = await this.placeModel.findById(placeId).exec();
+      if (!place) {
+        throw new NotFoundException(`Place with ID ${placeId} not found`);
+      }
+      Object.assign(place, placeDto);
+      place.location = {
         type: 'Point',
         coordinates: placeDto.location.coordinates,
-      },
-    }); return createdPlace.save();
+      };
+    } else {
+      place = new this.placeModel({
+        ...placeDto,
+        location: {
+          type: 'Point',
+          coordinates: placeDto.location.coordinates,
+        },
+      });
+    }
+    return place.save();
   }
 
   async findNearby(latitude: number, longitude: number): Promise<Place[]> {
