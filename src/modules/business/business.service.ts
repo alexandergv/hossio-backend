@@ -37,4 +37,12 @@ export class BusinessService {
     const business = await this.businessModel.findOne({ userId }).exec();
     return business;
   }
+
+  async deleteBusinessById(id: string): Promise<Business> {
+    const business = await this.businessModel.findByIdAndDelete(id).exec();
+    if (!business) {
+      throw new NotFoundException(`Business with ID ${id} not found`);
+    }
+    return business;
+  }
 }

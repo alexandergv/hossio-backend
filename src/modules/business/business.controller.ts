@@ -1,4 +1,4 @@
-import { Controller,Get, Post, Body, Param, UseGuards} from '@nestjs/common';
+import { Controller,Get, Delete, Post, Body, Param, UseGuards} from '@nestjs/common';
 import { BusinessService } from './business.service';
 import { BusinessDto } from './dto/business.dto';
 import { Business } from './schema/business.schema';
@@ -21,5 +21,11 @@ export class BusinessController {
   @Get('getByUserId/:userId')
   async getByUserId(@Param('userId') userId: string) {
     return this.businessService.findByUserId(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteBusiness(@Param('id') id: string) {
+    return this.businessService.deleteBusinessById(id);
   }
 }

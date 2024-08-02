@@ -72,4 +72,12 @@ export class PlacesService {
       ],
     }).exec();
   }
+
+  async deletePlaceById(id: string): Promise<Place> {
+    const place = await this.placeModel.findByIdAndDelete(id).exec();
+    if (!place) {
+      throw new NotFoundException(`Place with ID ${id} not found`);
+    }
+    return place;
+  }
 }

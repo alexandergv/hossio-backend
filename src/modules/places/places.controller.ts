@@ -1,5 +1,5 @@
 // places/places.controller.ts
-import { Controller, Get, Post, Body, Param,Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param, Query } from '@nestjs/common';
 import { PlacesService } from './places.service';
 import { Place } from './interfaces/place.interface';
 import { PlaceDto } from './dto/place.dto';
@@ -32,5 +32,10 @@ export class PlacesController {
   @Get('/search')
   async searchPlaces(@Query('q') query: string): Promise<Place[]> {
     return this.placesService.searchPlaces(query);
+  }
+
+  @Delete(':id')
+  async deletePlace(@Param('id') id: string) {
+    return this.placesService.deletePlaceById(id);
   }
 }
