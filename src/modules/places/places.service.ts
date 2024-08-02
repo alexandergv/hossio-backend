@@ -80,4 +80,14 @@ export class PlacesService {
     }
     return place;
   }
+
+  async bulkInsert(placesDto: PlaceDto[]): Promise<any> {
+    try {
+      const result = await this.placeModel.insertMany(placesDto, { ordered: false });
+      return result;
+    } catch (error) {
+      console.error('Error inserting places:', error);
+      throw error;
+    }
+  }
 }

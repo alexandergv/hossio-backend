@@ -38,4 +38,9 @@ export class PlacesController {
   async deletePlace(@Param('id') id: string) {
     return this.placesService.deletePlaceById(id);
   }
+
+  @Post('bulkInsert')
+  async bulkInsert(@Body() placesDto: PlaceDto[]): Promise<any> {
+    return this.placesService.bulkInsert(placesDto);
+  }
 }
