@@ -32,4 +32,13 @@ export class ReviewsService {
   async findAllByPlaceId(placeId: string): Promise<Review[]> {
     return this.reviewModel.find({ place: placeId }).exec();
   }
+
+  async getAverageRating(placeId: string): Promise<number> {
+    const reviews = await this.findAllByPlaceId(placeId);
+    if (reviews.length === 0) {
+      return 0;
+    }
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return totalRating / reviews.length;
+  }
 }

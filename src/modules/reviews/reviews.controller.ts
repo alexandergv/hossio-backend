@@ -15,6 +15,12 @@ export class ReviewsController {
     return this.reviewsService.create(reviewDto);
   }
 
+  @Get('averageRating/:placeId')
+  async getAverageRating(@Param('placeId') placeId: string): Promise<{ averageRating: number }> {
+    const averageRating = await this.reviewsService.getAverageRating(placeId);
+    return { averageRating };
+  }
+
   @Get('byPlaceId/:placeId')
   async getReviewsByPlaceId(@Param('placeId') placeId: string, @Request() req, @Response() res): Promise<any> {
     
