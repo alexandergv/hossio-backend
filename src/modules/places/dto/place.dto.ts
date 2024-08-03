@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty,   IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty,   IsNumber, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class ReviewDto {
@@ -37,6 +37,9 @@ export class PlaceDto {
   @IsArray()
   @IsNotEmpty()
   images: string[];
+
+  @IsBoolean()
+  isOpen: boolean;
 
   @ValidateNested()
   @Type(() => LocationDto)

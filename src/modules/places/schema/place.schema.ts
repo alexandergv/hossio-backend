@@ -19,6 +19,9 @@ export class Place extends Document {
   @Prop({ required: true })
   images: string[];
 
+  @Prop({ required: false })
+  isOpen: boolean;
+
   @Prop({
     type: {
       type: String,
