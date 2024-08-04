@@ -6,11 +6,13 @@ import { Users } from 'src/modules/users/schema/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Request } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private authService: AuthService,
     @InjectModel(Users.name) private userModel: Model<Users>,
+    private configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -23,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         }
       ]),
       ignoreExpiration: false,
-      secretOrKey: 'hossio',
+      secretOrKey: configService.get<string>('JWT_SECRET_KEY'),
     });
   }
 

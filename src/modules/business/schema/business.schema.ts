@@ -8,19 +8,19 @@ export class Business extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   address: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   phone: string;
 
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   description: string;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Place' })
+  @Prop({ required: false, type: Types.ObjectId, ref: 'Place' })
   place: Types.ObjectId;
 
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })

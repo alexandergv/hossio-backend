@@ -7,14 +7,20 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../modules/users/users.module';
 import { Users,UserSchema } from 'src/modules/users/schema/users.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({
-      secret: 'hossio', // Cambia esto por una clave secreta robusta
-      signOptions: { expiresIn: '1h' }, // Tiempo de expiración del token
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET_KEY'),
+        signOptions: { expiresIn: '1h' },
+      }),
+      inject: [ConfigService],
     }),
     MongooseModule.forFeature([{ name: Users.name, schema: UserSchema }]),
   ],

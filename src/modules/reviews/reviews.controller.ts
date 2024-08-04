@@ -4,10 +4,13 @@ import * as jwt from 'jsonwebtoken'
 import { ReviewDto } from './dto/review.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Review } from './schema/review.schema';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('reviews')
 export class ReviewsController {
-  constructor(private readonly reviewsService: ReviewsService) {}
+  constructor(private readonly reviewsService: ReviewsService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('newReview')
@@ -29,11 +32,12 @@ export class ReviewsController {
       .find(row => row.startsWith('auth_token='))
       .split('=')[1];
      let userId = null;
+     const secret = this.configService.get<string>('JWT_SECRET_KEY');
 
      if (token) {
        try {
          // Decode token to get user ID
-         const decoded: any = jwt.verify(token, 'hossio'); // Replace 'hossio' with your secret
+         const decoded: any = jwt.verify(token, secret);
          userId = decoded.sub; // Adjust based on your token payload
        } catch (error) {
          console.warn('Invalid token:', error);

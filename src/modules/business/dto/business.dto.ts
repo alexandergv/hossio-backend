@@ -11,11 +11,9 @@ export class BusinessDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
   address: string;
 
   @IsString()
-  @IsNotEmpty()
   phone: string;
 
   @IsEmail()
@@ -23,11 +21,9 @@ export class BusinessDto {
   email: string;
 
   @IsString()
-  @IsNotEmpty()
   description: string;
 
   @IsMongoId()
-  @IsNotEmpty()
   place: string;
 
   @IsMongoId()

@@ -7,10 +7,22 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import {EventsModule} from './modules/events/events.module';
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { validationSchema } from './config/validation-schema';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/hossio'), // Cambia la URL según tu configuración
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema // Makes the ConfigModule available globally
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
+      }),
+      inject: [ConfigService],
+    }),
     PlacesModule,
     BusinessModule,
     UsersModule,
