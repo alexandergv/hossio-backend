@@ -17,6 +17,7 @@ export class PlacesService {
 
   async findById(id: string): Promise<Place> {
     const place = await this.placeModel.findById(id).exec();
+    console.log(place);
     if (!place) {
       throw new NotFoundException(`Business with ID ${id} not found`);
     }
@@ -37,6 +38,10 @@ export class PlacesService {
         type: 'Point',
         coordinates: placeDto.location.coordinates,
       };
+      place.placeDetails = placeDto.placeDetails;
+
+      console.log(placeDto.placeDetails);
+      console.log(place);
     } else {
       place = new this.placeModel({
         ...placeDto,
@@ -44,6 +49,7 @@ export class PlacesService {
           type: 'Point',
           coordinates: placeDto.location.coordinates,
         },
+        placeDetails: placeDto.placeDetails
       });
     }
     return place.save();
