@@ -39,9 +39,6 @@ export class PlacesService {
         coordinates: placeDto.location.coordinates,
       };
       place.placeDetails = placeDto.placeDetails;
-
-      console.log(placeDto.placeDetails);
-      console.log(place);
     } else {
       place = new this.placeModel({
         ...placeDto,

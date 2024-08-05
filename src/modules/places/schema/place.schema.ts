@@ -35,7 +35,19 @@ export class Place extends Document {
 
   @Prop({
     type: Object,
-    default: {},
+    default: {
+      schedule: {
+        monday: { open: '', close: '' },
+        tuesday: { open: '', close: '' },
+        wednesday: { open: '', close: '' },
+        thursday: { open: '', close: '' },
+        friday: { open: '', close: '' },
+        saturday: { open: '', close: '' },
+        sunday: { open: '', close: '' },
+      },
+      type: [],
+      characteristics: []
+    },
   })
   placeDetails: {
     schedule: {
