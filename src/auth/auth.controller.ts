@@ -5,11 +5,13 @@ import { AuthService } from './auth.service';
 import { UsersDto } from '../modules/users/dto/users.dto';
 import { UsersService } from 'src/modules/users/users.service';
 import { Users } from 'src/modules/users/schema/users.schema';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService,
-      private usersService: UsersService
+      private usersService: UsersService,
+      private configService: ConfigService
      ) {}
 
   @Post('login')
@@ -24,7 +26,8 @@ export class AuthController {
       {
         httpOnly: true,
         secure: true,
-        sameSite: 'none',
+        sameSite: 'None',
+        domain: this.configService.get<string>('COOKIE_DOMAIN'),
       });
     res.json({ message: 'Logged in successfully', token });
   }
@@ -34,7 +37,8 @@ export class AuthController {
     res.clearCookie('auth_token', {
       httpOnly: true,
       secure: true,
-      sameSite: 'none',
+      sameSite: 'None',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
     });
     return res.status(200).json({ message: 'Logged out successfully' });
   }
@@ -47,7 +51,8 @@ export class AuthController {
       {   
         httpOnly: true,
         secure: true,
-        sameSite: 'none'
+        sameSite: 'None',
+        domain: this.configService.get<string>('COOKIE_DOMAIN'),
       }
     );
     res.json({ message: 'Logged in successfully', token });
