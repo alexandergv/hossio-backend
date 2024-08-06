@@ -37,6 +37,7 @@ export class PlacesService {
         type: 'Point',
         coordinates: placeDto.location.coordinates,
       };
+      place.placeDetails = placeDto.placeDetails;
     } else {
       place = new this.placeModel({
         ...placeDto,
@@ -44,6 +45,7 @@ export class PlacesService {
           type: 'Point',
           coordinates: placeDto.location.coordinates,
         },
+        placeDetails: placeDto.placeDetails
       });
     }
     return place.save();

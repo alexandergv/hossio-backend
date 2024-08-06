@@ -19,9 +19,6 @@ export class Place extends Document {
   @Prop({ required: true })
   images: string[];
 
-  @Prop({ required: false })
-  isOpen: boolean;
-
   @Prop({
     type: {
       type: String,
@@ -34,6 +31,37 @@ export class Place extends Document {
     },
   })
   location: { type: string, coordinates: [number, number] };
+
+
+  @Prop({
+    type: Object,
+    default: {
+      schedule: {
+        monday: { open: '', close: '' },
+        tuesday: { open: '', close: '' },
+        wednesday: { open: '', close: '' },
+        thursday: { open: '', close: '' },
+        friday: { open: '', close: '' },
+        saturday: { open: '', close: '' },
+        sunday: { open: '', close: '' },
+      },
+      type: [],
+      characteristics: []
+    },
+  })
+  placeDetails: {
+    schedule: {
+      monday: { open: string, close: string },
+      tuesday: { open: string, close: string },
+      wednesday: { open: string, close: string },
+      thursday: { open: string, close: string },
+      friday: { open: string, close: string },
+      saturday: { open: string, close: string },
+      sunday: { open: string, close: string },
+    },
+    type: string[],
+    characteristics: string[],
+  };
 }
 
 export const PlaceSchema = SchemaFactory.createForClass(Place);
