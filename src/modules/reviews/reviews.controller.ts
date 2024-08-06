@@ -26,7 +26,7 @@ export class ReviewsController {
 
   @Get('byPlaceId/:placeId')
   async getReviewsByPlaceId(@Param('placeId') placeId: string, @Request() req, @Response() res): Promise<any> {
-    
+    console.log('req.headers.cookie',req.headers.cookie)
      // Extract token from cookies
     const token = req.headers.cookie?.split(';')
       .find(row => row.startsWith('auth_token='))
