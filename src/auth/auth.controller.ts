@@ -20,13 +20,22 @@ export class AuthController {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
     const token = await this.authService.login(user);
-    res.cookie('auth_token', token.access_token, { httpOnly: true });
+    res.cookie('auth_token', token.access_token, 
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
     res.json({ message: 'Logged in successfully', token });
   }
 
   @Post('logout')
   logout(@Response() res ) {
-    res.clearCookie('auth_token');
+    res.clearCookie('auth_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
     return res.status(200).json({ message: 'Logged out successfully' });
   }
 
@@ -34,7 +43,13 @@ export class AuthController {
   async signUp(@Body() createUserDto: UsersDto, @Response() res ) {
     const user: Users = await this.usersService.create(createUserDto);
     const token = await this.authService.login(user);
-    res.cookie('auth_token', token.access_token, { httpOnly: true });
+    res.cookie('auth_token', token.access_token, 
+      {   
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+      }
+    );
     res.json({ message: 'Logged in successfully', token });
   }
 }
