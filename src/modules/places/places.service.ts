@@ -17,7 +17,6 @@ export class PlacesService {
 
   async findById(id: string): Promise<Place> {
     const place = await this.placeModel.findById(id).exec();
-    console.log(place);
     if (!place) {
       throw new NotFoundException(`Business with ID ${id} not found`);
     }
