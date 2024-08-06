@@ -30,7 +30,7 @@ export class ReviewsController {
      // Extract token from cookies
     const token = req.headers.cookie?.split(';')
       .find(row => row.startsWith('auth_token='))
-      .split('=')[1];
+      ?.split('=')[1];
      let userId = null;
      const secret = this.configService.get<string>('JWT_SECRET_KEY');
 
