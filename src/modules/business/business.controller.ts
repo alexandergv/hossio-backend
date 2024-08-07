@@ -1,4 +1,4 @@
-import { Controller,Get, Delete, Post, Body, Param, UseGuards} from '@nestjs/common';
+import { Controller,Get, Delete, Request, Post, Body,UnauthorizedException, Param, UseGuards} from '@nestjs/common';
 import { BusinessService } from './business.service';
 import { BusinessDto } from './dto/business.dto';
 import { Business } from './schema/business.schema';
@@ -19,13 +19,23 @@ export class BusinessController {
   
   // @UseGuards(JwtAuthGuard)
   @Get('getByUserId/:userId')
-  async getByUserId(@Param('userId') userId: string) {
+  async getByUserId(@Param('userId') userId: string, @Request() req) {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('No token found');
+    }
     return this.businessService.findByUserId(userId);
   }
 
   // @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async deleteBusiness(@Param('id') id: string) {
+  async deleteBusiness(@Param('id') id: string, @Request() req) {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('No token found');
+    }
     return this.businessService.deleteBusinessById(id);
   }
 }
