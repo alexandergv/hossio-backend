@@ -12,7 +12,7 @@ export class ReviewsController {
     private readonly configService: ConfigService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('newReview')
   async create(@Body() reviewDto: ReviewDto) {
     return this.reviewsService.create(reviewDto);
