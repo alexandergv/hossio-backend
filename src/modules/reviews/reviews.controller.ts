@@ -1,4 +1,4 @@
-import { Controller, Param, Get, Post, Body, UseGuards, Request, Response } from '@nestjs/common';
+import { Controller, UnauthorizedException, Param, Get, Post, Body, UseGuards, Request, Response } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import * as jwt from 'jsonwebtoken'
 import { ReviewDto } from './dto/review.dto';
@@ -14,7 +14,12 @@ export class ReviewsController {
 
   // @UseGuards(JwtAuthGuard)
   @Post('newReview')
-  async create(@Body() reviewDto: ReviewDto) {
+  async create(@Body() reviewDto: ReviewDto, @Request() req) {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('No token found');
+    }
     return this.reviewsService.create(reviewDto);
   }
 
@@ -26,11 +31,12 @@ export class ReviewsController {
 
   @Get('byPlaceId/:placeId')
   async getReviewsByPlaceId(@Param('placeId') placeId: string, @Request() req, @Response() res): Promise<any> {
-    console.log('req.headers.cookie',req.headers.cookie)
      // Extract token from cookies
-    const token = req.headers.cookie?.split(';')
-      .find(row => row.startsWith('auth_token='))
-      ?.split('=')[1];
+     const authHeader = req.headers.authorization;
+     const token = authHeader && authHeader.split(' ')[1];
+     
+     console.log(token);
+     console.log(authHeader);
      let userId = null;
      const secret = this.configService.get<string>('JWT_SECRET_KEY');
 
