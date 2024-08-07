@@ -17,13 +17,13 @@ export class BusinessController {
     return this.businessService.findById(id);
   }
   
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('getByUserId/:userId')
   async getByUserId(@Param('userId') userId: string) {
     return this.businessService.findByUserId(userId);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteBusiness(@Param('id') id: string) {
     return this.businessService.deleteBusinessById(id);
