@@ -60,7 +60,6 @@ export class PlaceDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
   description: string;
 
   @IsNumber()

@@ -52,17 +52,27 @@ export class PlacesService {
   }
 
   async findNearby(latitude: number, longitude: number): Promise<Place[]> {
-    return this.placeModel.find({
+    const places = await this.placeModel.find({
       location: {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: [latitude, longitude],
           },
-          $maxDistance: 10000, // distance in meters
+          $maxDistance: 2000, // distance in meters
         },
       },
     }).exec();
+
+    return places.sort((a, b) => {
+      const aOpen = this.isPlaceOpen(a.placeDetails.schedule);
+      const bOpen = this.isPlaceOpen(b.placeDetails.schedule);
+
+      if (aOpen && !bOpen) return -1;
+      if (!aOpen && bOpen) return 1;
+
+      return 0;
+    });
   }
 
   async searchPlaces(query: string): Promise<Place[]> {
@@ -90,6 +100,32 @@ export class PlacesService {
     } catch (error) {
       console.error('Error inserting places:', error);
       throw error;
+    }
+  }
+
+  private isPlaceOpen(schedule: {
+    [day: string]: { open: string; close: string };
+  }): boolean {
+    const now = new Date();
+    const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const currentDay = daysOfWeek[now.getDay()];
+    const currentTime = now.toTimeString().slice(0, 5); // 'HH:MM' format
+  
+    const openTime = schedule[currentDay].open;
+    const closeTime = schedule[currentDay].close;
+  
+    if (openTime === '24/7') {
+      return true;
+    }
+  
+    if (openTime === 'Cerrado' || closeTime === 'Cerrado') {
+      return false;
+    }
+  
+    if (closeTime < openTime) {
+      return currentTime >= openTime || currentTime < closeTime;
+    } else {
+      return currentTime >= openTime && currentTime < closeTime;
     }
   }
 }
