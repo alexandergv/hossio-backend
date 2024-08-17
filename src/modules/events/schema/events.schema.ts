@@ -7,7 +7,7 @@ export class Event extends Document {
   title: string;
 
   @Prop({ required: true })
-  summary: string;
+  description: string;
 
   @Prop({ required: true })
   placeName: string;
@@ -15,11 +15,17 @@ export class Event extends Document {
   @Prop({ required: true, type: Types.ObjectId, ref: 'Place' })
   placeId: Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   image: string;
 
   @Prop({ required: true })
-  date: Date;
+  startDate: Date;
+
+  @Prop({ required: true })
+  endDate: Date;
+  
+  @Prop({ required: true, enum: ['descuento', 'promocion'] })
+  type: string;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

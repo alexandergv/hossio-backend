@@ -35,8 +35,6 @@ export class ReviewsController {
      const authHeader = req.headers.authorization;
      const token = authHeader && authHeader.split(' ')[1];
      
-     console.log(token);
-     console.log(authHeader);
      let userId = null;
      const secret = this.configService.get<string>('JWT_SECRET_KEY');
 

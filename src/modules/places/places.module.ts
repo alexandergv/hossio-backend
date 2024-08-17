@@ -10,6 +10,7 @@ import { Place, PlaceSchema } from './schema/place.schema';
     MongooseModule.forFeature([{ name: Place.name, schema: PlaceSchema }])
   ],
   providers: [PlacesService],
-  controllers: [PlacesController]
+  controllers: [PlacesController],
+  exports: [PlacesService]
 })
 export class PlacesModule {}
