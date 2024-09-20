@@ -20,13 +20,14 @@ export class UsersController {
   }
 
 
-  @Post(':userId/favorite-places/:placeId')
+  @Post('favorite-places')
   async addFavoritePlace(
-    @Param('userId') userId: string,
-    @Param('placeId') placeId: string
+    @Body('userId') userId: string,
+    @Body('placeId') placeId: string
   ) {
     return this.usersService.addFavoritePlace(userId, placeId);
   }
+  
 
   @Delete(':userId/favorite-places/:placeId')
   async removeFavoritePlace(
