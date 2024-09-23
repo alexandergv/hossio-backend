@@ -25,8 +25,9 @@ export class PlacesController {
   async getNearbyPlaces(
     @Query('latitude') latitude: number,
     @Query('longitude') longitude: number,
+    @Query('userId') userId?: string
   ) {
-    return this.placesService.findNearby(latitude, longitude);
+    return this.placesService.findNearby(latitude, longitude,userId);
   }
 
   @Get('/search')

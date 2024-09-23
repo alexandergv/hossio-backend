@@ -1,15 +1,18 @@
 // places/places.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Place, PlaceDocument } from './schema/place.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { PlaceDto } from './dto/place.dto';
+import { UserDocument, Users } from '../users/schema/users.schema';
 
 
 @Injectable()
 export class PlacesService {
-  constructor(@InjectModel(Place.name) private placeModel: Model<PlaceDocument>) {}
+  constructor(@InjectModel(Place.name) private placeModel: Model<PlaceDocument>,
+  @InjectModel(Users.name) private userModel: Model<UserDocument>
+) {}
 
   async findAll(): Promise<Place[]> {
     return this.placeModel.find().exec();
@@ -51,7 +54,7 @@ export class PlacesService {
     return place.save();
   }
 
-  async findNearby(latitude: number, longitude: number): Promise<Place[]> {
+  async findNearby(latitude: number, longitude: number, userId?: string): Promise<any> {
     const places = await this.placeModel.find({
       location: {
         $near: {
@@ -63,14 +66,33 @@ export class PlacesService {
         },
       },
     }).exec();
-
-    return places.sort((a, b) => {
+  
+    let favoritePlaceIds: Types.ObjectId[] = [];
+  
+    if (userId) {
+      // Fetch the user's favorite places (assuming user model has a 'favorites' array)
+      const user = await this.userModel.findById(userId).select('favoritePlaces').exec();
+      favoritePlaceIds = user ? user.favoritePlaces : [];
+    }
+  
+    // Add 'isFavorite' flag to each place
+    const placesWithFavorites = places.map(place => {
+      const placeId = new Types.ObjectId(place._id as string);
+      const isFavorite = favoritePlaceIds.some(favorite => favorite.equals(placeId));
+      return {
+        ...place.toObject(),
+        isFavorite,  // Add isFavorite flag
+      };
+    });
+  
+    // Sort by whether places are open
+    return placesWithFavorites.sort((a, b) => {
       const aOpen = this.isPlaceOpen(a.placeDetails.schedule);
       const bOpen = this.isPlaceOpen(b.placeDetails.schedule);
-
+  
       if (aOpen && !bOpen) return -1;
       if (!aOpen && bOpen) return 1;
-
+  
       return 0;
     });
   }
