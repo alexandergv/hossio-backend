@@ -8,14 +8,13 @@ import { Users, UserSchema } from '../users/schema/users.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature(
-      [
-        { name: Place.name, schema: PlaceSchema },
-        { name: Users.name, schema: UserSchema }
-      ])
+    MongooseModule.forFeature([
+      { name: Place.name, schema: PlaceSchema },
+      { name: Users.name, schema: UserSchema },
+    ]),
   ],
   providers: [PlacesService],
   controllers: [PlacesController],
-  exports: [PlacesService]
+  exports: [PlacesService],
 })
 export class PlacesModule {}

@@ -1,4 +1,4 @@
-import { Injectable,NotFoundException  } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,12 +7,14 @@ import { BusinessDto } from './dto/business.dto';
 
 @Injectable()
 export class BusinessService {
-  constructor(@InjectModel(Business.name) private businessModel: Model<Business>) {}
+  constructor(
+    @InjectModel(Business.name) private businessModel: Model<Business>,
+  ) {}
 
   async createOrUpdate(businessDto: BusinessDto): Promise<Business> {
     let business: Business;
-    let businessId = businessDto._id;
-    
+    const businessId = businessDto._id;
+
     if (businessId) {
       business = await this.businessModel.findById(businessId).exec();
       if (!business) {
@@ -26,7 +28,7 @@ export class BusinessService {
   }
 
   async findById(id: string): Promise<Business> {
-    const business = await this.businessModel.findOne({id}).exec();
+    const business = await this.businessModel.findOne({ id }).exec();
     if (!business) {
       throw new NotFoundException(`Business with ID ${id} not found`);
     }

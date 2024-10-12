@@ -1,15 +1,11 @@
-import { IsString, IsNotEmpty,   IsNumber, IsArray, ValidateNested, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-
-class ReviewDto {
-  @IsString()
-  @IsNotEmpty()
-  text: string;
-
-  @IsString()
-  @IsNotEmpty()
-  author: string;
-}
 
 class LocationDto {
   @IsArray()
@@ -50,11 +46,10 @@ class PlaceDetailsDto {
   characteristics: string[];
 }
 
-
 export class PlaceDto {
   @IsString()
   _id: string;
-  
+
   @IsString()
   @IsNotEmpty()
   name: string;

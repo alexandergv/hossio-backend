@@ -5,9 +5,13 @@ import { BusinessController } from './business.controller';
 import { Business, BusinessSchema } from './schema/business.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Business.name, schema: BusinessSchema }])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Business.name, schema: BusinessSchema },
+    ]),
+  ],
   controllers: [BusinessController],
   providers: [BusinessService],
-  exports: [BusinessService]
+  exports: [BusinessService],
 })
 export class BusinessModule {}

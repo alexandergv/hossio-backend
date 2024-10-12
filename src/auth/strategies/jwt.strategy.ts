@@ -10,20 +10,22 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private authService: AuthService,
+  constructor(
+    private authService: AuthService,
     @InjectModel(Users.name) private userModel: Model<Users>,
     private configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {
-          console.log('req.headers.cookie',req.headers.cookie)
+          console.log('req.headers.cookie', req.headers.cookie);
           // Extract token from cookies
-          const token = req.headers.cookie?.split(';')
-          .find(row => row.startsWith('auth_token='))
-          ?.split('=')[1];
+          const token = req.headers.cookie
+            ?.split(';')
+            .find((row) => row.startsWith('auth_token='))
+            ?.split('=')[1];
           return token;
-        }
+        },
       ]),
       ignoreExpiration: false,
       secretOrKey: configService.get<string>('JWT_SECRET_KEY'),
@@ -33,7 +35,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   async validate(payload: any) {
     // Aquí puedes realizar validaciones adicionales
     const user = await this.userModel.findById(payload.sub).exec();
-    
+
     if (!user) {
       throw new UnauthorizedException('User not found');
     }

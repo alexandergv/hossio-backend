@@ -23,7 +23,7 @@ export class Event extends Document {
 
   @Prop({ required: true })
   endDate: Date;
-  
+
   @Prop({ required: true, enum: ['descuento', 'promocion'] })
   type: string;
 }

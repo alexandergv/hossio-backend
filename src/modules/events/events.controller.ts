@@ -1,13 +1,14 @@
-import { Controller, Get, Query, Post, Body,Response,Request } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body, Request } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { Event } from './schema/events.schema';
 import { ConfigService } from '@nestjs/config';
-import * as jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken';
 
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService,
-    private readonly configService: ConfigService
+  constructor(
+    private readonly eventsService: EventsService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get('latest')
@@ -18,26 +19,28 @@ export class EventsController {
   }
 
   @Post('create')
-  async createEvent(@Body() eventDto: Partial<Event>,
-   @Request() req, @Response() res): Promise<Event> {
-       // Extract token from cookies
-       const authHeader = req.headers.authorization;
-       const token = authHeader && authHeader.split(' ')[1];
-       
-       let userId = null;
-       const secret = this.configService.get<string>('JWT_SECRET_KEY');
-  
-       if (token) {
-         try {
-           // Decode token to get user ID
-           const decoded: any = jwt.verify(token, secret);
-           userId = decoded.sub; // Adjust based on your token payload
-         } catch (error) {
-           throw new Error("No authentication token.")
-           // Handle invalid token case if necessary
-         }
-       }
-    
+  async createEvent(
+    @Body() eventDto: Partial<Event>,
+    @Request() req,
+  ): Promise<Event> {
+    // Extract token from cookies
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+
+    let userId = null;
+    const secret = this.configService.get<string>('JWT_SECRET_KEY');
+
+    if (token) {
+      try {
+        // Decode token to get user ID
+        const decoded: any = jwt.verify(token, secret);
+        userId = decoded.sub; // Adjust based on your token payload
+      } catch (error) {
+        throw new Error('No authentication token.');
+        // Handle invalid token case if necessary
+      }
+    }
+
     return this.eventsService.createEvent(eventDto, userId);
   }
 

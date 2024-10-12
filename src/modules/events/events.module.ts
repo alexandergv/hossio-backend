@@ -10,7 +10,7 @@ import { PlacesModule } from '../places/places.module';
   imports: [
     MongooseModule.forFeature([{ name: 'Event', schema: EventSchema }]),
     BusinessModule,
-    PlacesModule
+    PlacesModule,
   ],
   controllers: [EventsController],
   providers: [EventsService],

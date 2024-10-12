@@ -1,6 +1,4 @@
-import { IsString, IsNotEmpty, IsEmail, ValidateNested, IsMongoId } from 'class-validator';
-import { Type } from 'class-transformer';
-import { PlaceDto } from '../../places/dto/place.dto';
+import { IsString, IsNotEmpty, IsEmail, IsMongoId } from 'class-validator';
 
 export class BusinessDto {
   @IsString()
