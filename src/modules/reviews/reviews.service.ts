@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Review } from './schema/review.schema';
@@ -7,13 +11,14 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ReviewsService {
-  constructor(@InjectModel(Review.name) private reviewModel: Model<Review>,
-  private usersService: UsersService
-) {}
+  constructor(
+    @InjectModel(Review.name) private reviewModel: Model<Review>,
+    private usersService: UsersService,
+  ) {}
 
   async create(reviewDto: ReviewDto): Promise<Review> {
     const { user, place } = reviewDto;
-    
+
     const existingReview = await this.reviewModel.findOne({ user, place });
     if (existingReview) {
       throw new ConflictException('User has already reviewed this place');

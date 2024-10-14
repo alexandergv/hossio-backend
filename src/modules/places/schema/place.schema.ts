@@ -6,14 +6,13 @@ export type PlaceDocument = Place & Document;
 
 @Schema()
 export class Place extends Document {
-
   @Prop({ required: true })
   name: string;
 
   @Prop({ required: false })
   description: string;
 
-  @Prop({ required: true , default: 0 })
+  @Prop({ required: true, default: 0 })
   rating: number;
 
   @Prop({ required: true })
@@ -30,8 +29,7 @@ export class Place extends Document {
       required: true,
     },
   })
-  location: { type: string, coordinates: [number, number] };
-
+  location: { type: string; coordinates: [number, number] };
 
   @Prop({
     type: Object,
@@ -46,21 +44,21 @@ export class Place extends Document {
         sunday: { open: '', close: '' },
       },
       type: [],
-      characteristics: []
+      characteristics: [],
     },
   })
   placeDetails: {
     schedule: {
-      monday: { open: string, close: string },
-      tuesday: { open: string, close: string },
-      wednesday: { open: string, close: string },
-      thursday: { open: string, close: string },
-      friday: { open: string, close: string },
-      saturday: { open: string, close: string },
-      sunday: { open: string, close: string },
-    },
-    type: string[],
-    characteristics: string[],
+      monday: { open: string; close: string };
+      tuesday: { open: string; close: string };
+      wednesday: { open: string; close: string };
+      thursday: { open: string; close: string };
+      friday: { open: string; close: string };
+      saturday: { open: string; close: string };
+      sunday: { open: string; close: string };
+    };
+    type: string[];
+    characteristics: string[];
   };
 }
 

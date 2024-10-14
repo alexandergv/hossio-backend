@@ -22,18 +22,19 @@ export class Review extends Document {
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);
 
-
 ReviewSchema.post('save', async function (doc, next) {
   setImmediate(async () => {
     const placeModel = this.model('Place') as Model<Place>;
     const placeId = doc.place;
 
-    const reviews: any = await this.model('Review').find({ place: placeId }).exec();
+    const reviews: any = await this.model('Review')
+      .find({ place: placeId })
+      .exec();
     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
     const averageRating = totalRating / reviews.length;
 
     await placeModel.findByIdAndUpdate(placeId, {
-      rating: averageRating
+      rating: averageRating,
       // reviewCount: reviews.length,
     });
   });

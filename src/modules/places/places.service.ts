@@ -1,15 +1,17 @@
 // places/places.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Place, PlaceDocument } from './schema/place.schema';
-import { v4 as uuidv4 } from 'uuid';
 import { PlaceDto } from './dto/place.dto';
-
+import { UserDocument, Users } from '../users/schema/users.schema';
 
 @Injectable()
 export class PlacesService {
-  constructor(@InjectModel(Place.name) private placeModel: Model<PlaceDocument>) {}
+  constructor(
+    @InjectModel(Place.name) private placeModel: Model<PlaceDocument>,
+    @InjectModel(Users.name) private userModel: Model<UserDocument>,
+  ) {}
 
   async findAll(): Promise<Place[]> {
     return this.placeModel.find().exec();
@@ -22,11 +24,11 @@ export class PlacesService {
     }
     return place;
   }
-  
+
   async createOrUpdate(placeDto: PlaceDto): Promise<Place> {
     let place: any;
-    let placeId = placeDto._id;
-    
+    const placeId = placeDto._id;
+
     if (placeId) {
       place = await this.placeModel.findById(placeId).exec();
       if (!place) {
@@ -45,26 +47,56 @@ export class PlacesService {
           type: 'Point',
           coordinates: placeDto.location.coordinates,
         },
-        placeDetails: placeDto.placeDetails
+        placeDetails: placeDto.placeDetails,
       });
     }
     return place.save();
   }
 
-  async findNearby(latitude: number, longitude: number): Promise<Place[]> {
-    const places = await this.placeModel.find({
-      location: {
-        $near: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [latitude, longitude],
+  async findNearby(
+    latitude: number,
+    longitude: number,
+    userId?: string,
+  ): Promise<any> {
+    const places = await this.placeModel
+      .find({
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [latitude, longitude],
+            },
+            $maxDistance: 2000, // distance in meters
           },
-          $maxDistance: 2000, // distance in meters
         },
-      },
-    }).exec();
+      })
+      .exec();
 
-    return places.sort((a, b) => {
+    let favoritePlaceIds: Types.ObjectId[] = [];
+
+    if (userId) {
+      // Fetch the user's favorite places (assuming user model has a 'favorites' array)
+      const user = await this.userModel
+        .findById(userId)
+        .select('favoritePlaces')
+        .exec();
+      favoritePlaceIds = user ? user.favoritePlaces : [];
+    }
+
+    // Add 'isFavorite' flag to each place
+    const placesWithFavorites = places.map((place) => {
+      const placeId = new Types.ObjectId(place._id as string);
+      const isFavorite = favoritePlaceIds.some((favorite) =>
+        favorite.equals(placeId),
+      );
+      return {
+        ...place.toObject(),
+        isFavorite, // Add isFavorite flag
+      };
+    });
+
+    // Sort by whether places are open
+    return placesWithFavorites.sort((a, b) => {
       const aOpen = this.isPlaceOpen(a.placeDetails.schedule);
       const bOpen = this.isPlaceOpen(b.placeDetails.schedule);
 
@@ -77,12 +109,11 @@ export class PlacesService {
 
   async searchPlaces(query: string): Promise<Place[]> {
     const searchRegex = new RegExp(query, 'i'); // 'i' for case-insensitive
-    return this.placeModel.find({
-      $or: [
-        { name: searchRegex },
-        { description: searchRegex },
-      ],
-    }).exec();
+    return this.placeModel
+      .find({
+        $or: [{ name: searchRegex }, { description: searchRegex }],
+      })
+      .exec();
   }
 
   async deletePlaceById(id: string): Promise<Place> {
@@ -95,7 +126,9 @@ export class PlacesService {
 
   async bulkInsert(placesDto: PlaceDto[]): Promise<any> {
     try {
-      const result = await this.placeModel.insertMany(placesDto, { ordered: false });
+      const result = await this.placeModel.insertMany(placesDto, {
+        ordered: false,
+      });
       return result;
     } catch (error) {
       console.error('Error inserting places:', error);
@@ -107,21 +140,29 @@ export class PlacesService {
     [day: string]: { open: string; close: string };
   }): boolean {
     const now = new Date();
-    const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const daysOfWeek = [
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+    ];
     const currentDay = daysOfWeek[now.getDay()];
     const currentTime = now.toTimeString().slice(0, 5); // 'HH:MM' format
-  
+
     const openTime = schedule[currentDay].open;
     const closeTime = schedule[currentDay].close;
-  
+
     if (openTime === '24/7') {
       return true;
     }
-  
+
     if (openTime === 'Cerrado' || closeTime === 'Cerrado') {
       return false;
     }
-  
+
     if (closeTime < openTime) {
       return currentTime >= openTime || currentTime < closeTime;
     } else {
